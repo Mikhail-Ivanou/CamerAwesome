@@ -34,6 +34,29 @@
   _videoOptions = videoOptions;
   _recordingQuality = recordingQuality;
   
+    
+
+
+    // Не сработало ─── Настройка AVAudioSession ДО создания AVCaptureSession ───────────────
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSError *audioError = nil;
+
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord
+                         mode:AVAudioSessionModeVideoRecording
+                      options:  AVAudioSessionCategoryOptionAllowBluetooth      // BT HFP (моно, микрофон)
+                              | AVAudioSessionCategoryOptionAllowBluetoothA2DP  // BT A2DP (стерео, наушники)
+                              | AVAudioSessionCategoryOptionDefaultToSpeaker    // вывод в динамик, не в трубку
+                      error:&audioError];
+
+    if (audioError) {
+        NSLog(@"[CamerAwesome] AVAudioSession setCategory error: %@", audioError.localizedDescription);
+    }
+
+    [audioSession setActive:YES error:&audioError];
+    if (audioError) {
+        NSLog(@"[CamerAwesome] AVAudioSession setActive error: %@", audioError.localizedDescription);
+    }
+    
   // Creating capture session
   _captureSession = [[AVCaptureSession alloc] init];
   _captureVideoOutput = [AVCaptureVideoDataOutput new];
@@ -166,6 +189,18 @@
   [_captureConnection setAutomaticallyAdjustsVideoMirroring:NO];
   [_captureConnection setVideoMirrored:(_cameraSensorPosition == PigeonSensorPositionFront)];
   [_captureConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+    
+//    if (_captureDevice.activeFormat.isVideoHDRSupported) {
+//        _captureDevice.automaticallyAdjustsVideoHDREnabled = YES;
+//    }
+//    for (AVCaptureOutput *output in _captureSession.outputs) {
+ //           AVCaptureConnection *connection = [output connectionWithMediaType:AVMediaTypeVideo];
+ //           if (!connection) continue;
+
+ //           if ([_captureDevice.activeFormat isVideoStabilizationModeSupported:AVCaptureVideoStabilizationModeAuto]) {
+ //               connection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeAuto;
+  //          }
+  //      }
 }
 
 - (void)dealloc {

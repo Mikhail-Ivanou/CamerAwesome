@@ -389,7 +389,6 @@ class _CameraWidgetBuilder extends State<CameraAwesomeBuilder>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
     _cameraContext = CameraContext.create(
       widget.sensorConfig,
       enablePhysicalButton: widget.enablePhysicalButton,
