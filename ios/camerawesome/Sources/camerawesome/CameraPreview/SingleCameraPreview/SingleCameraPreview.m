@@ -37,6 +37,19 @@
     
 
 
+
+  // Creating capture session
+  _captureSession = [[AVCaptureSession alloc] init];
+  _captureVideoOutput = [AVCaptureVideoDataOutput new];
+  _captureVideoOutput.videoSettings = @{(NSString*)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA)};
+  [_captureVideoOutput setAlwaysDiscardsLateVideoFrames:YES];
+  [_captureVideoOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
+  [_captureSession addOutputWithNoConnections:_captureVideoOutput];
+  
+  [self initCameraPreview:sensor];
+  
+    self.captureSession.automaticallyConfiguresApplicationAudioSession = NO;
+    
     // Не сработало ─── Настройка AVAudioSession ДО создания AVCaptureSession ───────────────
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     NSError *audioError = nil;
@@ -57,16 +70,7 @@
         NSLog(@"[CamerAwesome] AVAudioSession setActive error: %@", audioError.localizedDescription);
     }
     
-  // Creating capture session
-  _captureSession = [[AVCaptureSession alloc] init];
-  _captureVideoOutput = [AVCaptureVideoDataOutput new];
-  _captureVideoOutput.videoSettings = @{(NSString*)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA)};
-  [_captureVideoOutput setAlwaysDiscardsLateVideoFrames:YES];
-  [_captureVideoOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
-  [_captureSession addOutputWithNoConnections:_captureVideoOutput];
-  
-  [self initCameraPreview:sensor];
-  
+    
   [_captureConnection setAutomaticallyAdjustsVideoMirroring:NO];
   if (mirrorFrontCamera && [_captureConnection isVideoMirroringSupported]) {
     [_captureConnection setVideoMirrored:mirrorFrontCamera];
