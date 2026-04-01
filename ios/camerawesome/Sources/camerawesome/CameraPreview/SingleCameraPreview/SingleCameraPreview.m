@@ -22,7 +22,7 @@
                           completion:(nonnull void (^)(NSNumber * _Nullable, FlutterError * _Nullable))completion
                        dispatchQueue:(dispatch_queue_t)dispatchQueue {
   self = [super init];
-  
+
   _completion = completion;
   _dispatchQueue = dispatchQueue;
   
@@ -34,7 +34,7 @@
   _videoOptions = videoOptions;
   _recordingQuality = recordingQuality;
   
-    
+    self.captureSession.automaticallyConfiguresApplicationAudioSession = NO;
 
 
 
@@ -48,7 +48,7 @@
   
   [self initCameraPreview:sensor];
   
-    self.captureSession.automaticallyConfiguresApplicationAudioSession = NO;
+
     
     // Не сработало ─── Настройка AVAudioSession ДО создания AVCaptureSession ───────────────
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
